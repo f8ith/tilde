@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <meta charset="utf-8" />
 <meta name="color-scheme" content="dark light" />
 <meta name="robots" content="noindex" />
@@ -47,11 +47,13 @@
     ['c', { name: 'Calendar', url: 'https://calendar.google.com' }],
     ['d', { name: 'Drive', url: 'https://drive.google.com' }],
     ['e', { name: 'Intranet', url: 'https://hkust.edu.hk/stu_intranet' }],
+    ['h', { name: 'HN', url: 'https://news.ycombinator.com/' }],
     ['g', { name: 'GitHub', url: 'https://github.com' }],
     ['i', { name: 'Discord', url: 'https://discord.com/channels/@me' }],
     ['l', { name: 'LeetCode', url: 'https://leetcode.com/problemset/all/' }],
     ['m', { name: 'Mail', url: 'https://mail.google.com' }],
-    ['n', { name: 'Notion', url: 'https://www.notion.so' }],
+    ['n', { name: 'Netflix', url: 'https://www.netflix.com' }],
+    ['o', { name: 'Disney+', url: 'https://www.disneyplus.com' }],
     [
       'r',
       {
@@ -340,6 +342,17 @@
 
     static #escapeRegexCharacters(s) {
       return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    }
+
+    static #fetchGoogleSuggestions(search) {
+      return fetch(
+        `https://google.com/complete/search?client=chrome&q=${search}`
+      ).then((res) => {
+        res.json().then((data) => {
+          console.log(data);
+          return data[1];
+        });
+      });
     }
 
     static #fetchDuckDuckGoSuggestions(search) {
