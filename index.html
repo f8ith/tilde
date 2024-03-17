@@ -42,19 +42,19 @@
   };
 
   const COMMANDS = new Map([
-    ['b', { name: 'Yahoo Finance', url: 'https://finance.yahoo.com' }],
-    ['c', { name: 'Canvas', url: 'https://canvas.ust.hk' }],
-    ['d', { name: 'Google Drive', url: 'https://drive.google.com' }],
-    ['e', { name: 'Intranet', url: 'https://hkust.edu.hk/stu_intranet' }],
-    ['f', { name: 'Finviz', url: 'https://finviz.com' }],
-    ['g', { name: 'GitHub', url: 'https://github.com' }],
-    ['h', { name: 'HN', url: 'https://news.ycombinator.com/' }],
-    ['i', { name: 'Discord', url: 'https://discord.com/channels/@me' }],
-    ['l', { name: 'LeetCode', url: 'https://leetcode.com/problemset/all/' }],
-    ['m', { name: 'Mail', url: 'https://mail.google.com/u/0' }],
-    ['n', { name: 'Netflix', url: 'https://www.netflix.com' }],
-    ['p', { name: 'Play Books', url: 'https://www.play.google.com/books' }],
-    ['o', { name: 'Disney+', url: 'https://www.disneyplus.com' }],
+    ['b', {name: 'Y Finance', url: 'https://finance.yahoo.com'}],
+    ['c', {name: 'Canvas', url: 'https://canvas.ust.hk'}],
+    ['d', {name: 'Drive', url: 'https://drive.google.com'}],
+    ['e', {name: 'Intranet', url: 'https://hkust.edu.hk/stu_intranet'}],
+    ['f', {name: 'Finviz', url: 'https://finviz.com'}],
+    ['g', {name: 'GitHub', url: 'https://github.com'}],
+    ['h', {name: 'HN', url: 'https://news.ycombinator.com/'}],
+    ['i', {name: 'Discord', url: 'https://discord.com/channels/@me'}],
+    ['l', {name: 'LeetCode', url: 'https://leetcode.com/problemset/all/'}],
+    ['m', {name: 'Mail', url: 'https://mail.google.com/u/0'}],
+    ['n', {name: 'Netflix', url: 'https://www.netflix.com'}],
+    ['p', {name: 'Play Books', url: 'https://www.play.google.com/books'}],
+    ['o', {name: 'Disney+', url: 'https://www.disneyplus.com'}],
     [
       'r',
       {
@@ -64,8 +64,8 @@
         url: 'https://www.reddit.com',
       },
     ],
-    ['t', { name: 'Teams', url: 'https://teams.microsoft.com' }],
-    ['u', { name: 'TweetDeck', url: 'https://tweetdeck.twitter.com' }],
+    ['t', {name: 'Teams', url: 'https://teams.microsoft.com'}],
+    ['u', {name: 'TweetDeck', url: 'https://tweetdeck.twitter.com'}],
     [
       'w',
       {
@@ -74,7 +74,7 @@
         url: 'https://en.wikipedia.org',
       },
     ],
-    ['x', { name: '𝕏', url: 'https://x.com' }],
+    ['x', {name: '𝕏', url: 'https://x.com'}],
     [
       'y',
       {
@@ -169,13 +169,13 @@
   class Commands extends HTMLElement {
     constructor() {
       super();
-      this.attachShadow({ mode: 'open' });
+      this.attachShadow({mode: 'open'});
       const template = document.getElementById('commands-template');
       const clone = template.content.cloneNode(true);
       const commands = clone.querySelector('.commands');
       const commandTemplate = document.getElementById('command-template');
 
-      for (const [key, { name, url }] of COMMANDS.entries()) {
+      for (const [key, {name, url}] of COMMANDS.entries()) {
         if (!name || !url) continue;
         const clone = commandTemplate.content.cloneNode(true);
         const command = clone.querySelector('.command');
@@ -324,7 +324,7 @@
 
     constructor() {
       super();
-      this.attachShadow({ mode: 'open' });
+      this.attachShadow({mode: 'open'});
       const template = document.getElementById('search-template');
       const clone = template.content.cloneNode(true);
       this.#dialog = clone.querySelector('.dialog');
@@ -338,7 +338,7 @@
       this.shadowRoot.append(clone);
     }
 
-    static #attachSearchPrefix(array, { key, splitBy }) {
+    static #attachSearchPrefix(array, {key, splitBy}) {
       if (!splitBy) return array;
       return array.map((search) => `${key}${splitBy}${search}`);
     }
@@ -399,37 +399,37 @@
 
       if (this.#isUrl(query)) {
         const url = this.#hasProtocol(query) ? query : `https://${query}`;
-        return { query, url };
+        return {query, url};
       }
 
       if (COMMANDS.has(query)) {
-        const { command, key, url } = COMMANDS.get(query);
-        return command ? Search.#parseQuery(command) : { key, query, url };
+        const {command, key, url} = COMMANDS.get(query);
+        return command ? Search.#parseQuery(command) : {key, query, url};
       }
 
       let splitBy = CONFIG.commandSearchDelimiter;
       const [searchKey, rawSearch] = query.split(new RegExp(`${splitBy}(.*)`));
 
       if (COMMANDS.has(searchKey)) {
-        const { searchTemplate, url: base } = COMMANDS.get(searchKey);
+        const {searchTemplate, url: base} = COMMANDS.get(searchKey);
         const search = rawSearch.trim();
         const url = Search.#formatSearchUrl(base, searchTemplate, search);
-        return { key: searchKey, query, search, splitBy, url };
+        return {key: searchKey, query, search, splitBy, url};
       }
 
       splitBy = CONFIG.commandPathDelimiter;
       const [pathKey, path] = query.split(new RegExp(`${splitBy}(.*)`));
 
       if (COMMANDS.has(pathKey)) {
-        const { url: base } = COMMANDS.get(pathKey);
+        const {url: base} = COMMANDS.get(pathKey);
         const [baseUrl] = Search.#splitUrl(base);
         const url = `${baseUrl}/${path}`;
-        return { key: pathKey, path, query, splitBy, url };
+        return {key: pathKey, path, query, splitBy, url};
       }
 
       const [baseUrl, rest] = Search.#splitUrl(CONFIG.defaultSearchTemplate);
       const url = Search.#formatSearchUrl(baseUrl, rest, query);
-      return { query, search: query, url };
+      return {query, search: query, url};
     };
 
     static #splitUrl(url) {
@@ -448,7 +448,7 @@
     }
 
     #execute(query) {
-      const { url } = Search.#parseQuery(query);
+      const {url} = Search.#parseQuery(query);
       const target = CONFIG.openLinksInNewTab ? '_blank' : '_self';
       window.open(url, target, 'noopener noreferrer');
       this.#close();
